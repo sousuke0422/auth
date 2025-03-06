@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  name        String
+  displayName String?  @map("display_name")
+  isAdmin     Boolean  @default(false) @map("is_admin")
+  avatarUrl   String?   @map("avatar_url")
+  mail String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  passwordId String? @map("password_id")
+  password UserPassword? @relation(fields: [passwordId], references: [id])
+  userIdentities UserIdentity[]
+}
+
+model UserIdentity {
+  id           String   @id @default(cuid())
+  provider     String   // OIDC プロバイダー名 (google, github, keycloak)
+  sub          String   // プロバイダー固有のユーザーID
+  userId       String   @unique @map("user_id") // User の ID
+  accessToken String? @map("access_token")
+  idToken     String? @map("id_token")
+  refreshToken String? @map("refresh_token")
+  expiresAt   DateTime? @map("expires_at")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, sub])  // 同じプロバイダーで同じ sub は1つだけ
+}
+
+model UserPassword {
+  id String @id @default(cuid())
+  password String
+  passwordResetToken String? @map("password_reset_token")
+  passwordResetExpires DateTime? @map("password_reset_expires")
+
+  users User[]
+}
+
+// model ProviderUrls {
+//   id String @id @default(cuid())
+//   name String
+//   url String
+// }
+
+model Providers {
+  id String @id @default(cuid())
+  name String
+  url String
+  clientId String @map("client_id")
+  clientSecret String @map("client_secret")
+  // redirect_uris は自動
+  // response_types ?
+  scope String @default("openid profile email")
+  // code_challenge_method ?
+}
