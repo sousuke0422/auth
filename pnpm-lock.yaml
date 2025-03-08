@@ -14,6 +14,9 @@ importers:
       '@node-rs/argon2':
         specifier: ^2.0.2
         version: 2.0.2
+      '@node-rs/jsonwebtoken':
+        specifier: ^0.5.9
+        version: 0.5.9
       '@prisma/client':
         specifier: 6.4.1
         version: 6.4.1(typescript@5.8.2)
@@ -32,21 +35,33 @@ importers:
       fastify:
         specifier: ^5.2.1
         version: 5.2.1
+      h3:
+        specifier: ^1.15.1
+        version: 1.15.1
       hono:
         specifier: ^4.7.2
         version: 4.7.2
       jwt-decode:
         specifier: ^4.0.0
         version: 4.0.0
+      lru-cache:
+        specifier: ^11.0.2
+        version: 11.0.2
       lucide-vue-next:
         specifier: 0.477.0
         version: 0.477.0(vue@3.5.13(typescript@5.8.2))
+      misskey-js:
+        specifier: 2025.3.1-beta.2
+        version: 2025.3.1-beta.2
       nuxt:
         specifier: 3.15.4
         version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.13.9)(db0@0.2.4)(ioredis@5.5.0)(magicast@0.3.5)(rollup@4.34.9)(terser@5.39.0)(typescript@5.8.2)(vite@6.2.0(@types/node@22.13.9)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0))(yaml@2.7.0)
       openid-client:
         specifier: 5.7.1
         version: 5.7.1
+      openid-client@6:
+        specifier: npm:openid-client@6.3.3
+        version: openid-client@6.3.3
       reka-ui:
         specifier: ^2.0.2
         version: 2.0.2(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
@@ -59,6 +74,9 @@ importers:
       tailwindcss-animate:
         specifier: 1.0.7
         version: 1.0.7(tailwindcss@3.4.17)
+      unstorage:
+        specifier: ^1.15.0
+        version: 1.15.0(db0@0.2.4)(ioredis@5.5.0)
       vue:
         specifier: 3.5.13
         version: 3.5.13(typescript@5.8.2)
@@ -748,6 +766,93 @@ packages:
     resolution: {integrity: sha512-t64wIsPEtNd4aUPuTAyeL2ubxATCBGmeluaKXEMAFk/8w6AJIVVkeLKMBpgLW6LU2t5cQxT+env/c6jxbtTQBg==}
     engines: {node: '>= 10'}
 
+  '@node-rs/jsonwebtoken-android-arm-eabi@0.5.9':
+    resolution: {integrity: sha512-VXiC3xyDmW9ulJVAL45YR/uDuY3RYcMnIWp95R2+TE/my2U+lLa83u18aXu59slmdq8QTmy8jGAsfRN+FW+fpg==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [android]
+
+  '@node-rs/jsonwebtoken-android-arm64@0.5.9':
+    resolution: {integrity: sha512-BvgC60UtxJPAkI1NuhjCa3iQ5SofWUoNVJhUZ86Ll0umZKYg6vz/MhOB0sm9dX8qymGAWiEQuKi5ZFYHT6ykKw==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [android]
+
+  '@node-rs/jsonwebtoken-darwin-arm64@0.5.9':
+    resolution: {integrity: sha512-0MynAIggpU6tWlfZpcjDeS4ztXlFFQiKwAcm+aYAKdAYTkBUQAVPp2J60rRzOadaA+Rd1GXzDyCd6L9eVj870A==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@node-rs/jsonwebtoken-darwin-x64@0.5.9':
+    resolution: {integrity: sha512-r3IqAVA/WbRomUb2rDJupmLeZqrnLuGWtVmLrlX/yelDJDBmIFaCpwPceDjTTMb5Ap53p4jzStzwGIv+oDbyDA==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@node-rs/jsonwebtoken-freebsd-x64@0.5.9':
+    resolution: {integrity: sha512-b2SF4PR7FJT3Vxjb81bfy2/ZPpL1rlxoapMtD+9gRiUpoC2SGgFpknpB0vxNrIqQ/iTvp6l6wwd8/8TaCc5g4w==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [freebsd]
+
+  '@node-rs/jsonwebtoken-linux-arm-gnueabihf@0.5.9':
+    resolution: {integrity: sha512-9oTgwB56o+KOUI+pSzaEAuBNf7MSwR46ObKKs0T5ip2o2dsG7hxj8uoD4VUPGmFF9bBw2cQChbWrJ/gT8tEYsA==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [linux]
+
+  '@node-rs/jsonwebtoken-linux-arm64-gnu@0.5.9':
+    resolution: {integrity: sha512-klsrWziZOES69q8vbiDupRar8JRxOeOwqJ1G3VMJWBLCildc2bg7mxEWv59MztCTGT3RILXlKYC6KgD3EHKYlg==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@node-rs/jsonwebtoken-linux-arm64-musl@0.5.9':
+    resolution: {integrity: sha512-ZP+MRIhwIFHKbq8LZxYA8y/lOe9uC/d5gLr1kd0F3uQGcJDQzx3C/x+AlG5YTkpBlWX9y9Du9ILxHT+4WsqB2g==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@node-rs/jsonwebtoken-linux-x64-gnu@0.5.9':
+    resolution: {integrity: sha512-yzom5oTjyqhJIq9LZpSvIuig2+AN+2TVE5ym7cwun+gg+EfSniLxXYInMy3VNMyYgpZejFIGdsbygTcsvLqb+g==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+
+  '@node-rs/jsonwebtoken-linux-x64-musl@0.5.9':
+    resolution: {integrity: sha512-y78kFpvsTZrCb+GVrtXxa5z9COrJoHxOlAiytB343xcuwXEyDwgPCzzt7K9dINbOIxPDRpNsHT19UfJsKKYGDQ==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+
+  '@node-rs/jsonwebtoken-wasm32-wasi@0.5.9':
+    resolution: {integrity: sha512-2if46hVi8+K1Or2iZljNeIjS0S5zbZN2mvne+5OYZBlam79bupgjgJmK/wkYD2eM2w1ozcVGyUgPHN1aBpcNSA==}
+    engines: {node: '>=14.0.0'}
+    cpu: [wasm32]
+
+  '@node-rs/jsonwebtoken-win32-arm64-msvc@0.5.9':
+    resolution: {integrity: sha512-dU8eqZaUqjJVBuv05a83l0RCB7oiQJAHzlk8faE4+/ZAhJaLj0HJJDZwjPWfPGeJPAb8AAtgJVlcMOnCUnyWBA==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@node-rs/jsonwebtoken-win32-ia32-msvc@0.5.9':
+    resolution: {integrity: sha512-3t4bfiIqn7JwcQCZdHWbertnuRyuYlakUPkrmo0j96mpNqn6gs0BiQ2UEia6b+DL6PIpOyC7VJ4p7+Q7V3O3Cw==}
+    engines: {node: '>= 10'}
+    cpu: [ia32]
+    os: [win32]
+
+  '@node-rs/jsonwebtoken-win32-x64-msvc@0.5.9':
+    resolution: {integrity: sha512-9FSiXjJcluUrxv+mRplnYx1ZjdA4smSjqwsF6TjRsFX1du8g8TIgMxGpRollAk7ZkQcwc3/zlFqq/i7N3ZSpPQ==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
+
+  '@node-rs/jsonwebtoken@0.5.9':
+    resolution: {integrity: sha512-c1mFw/Xi9Bqs6yNkQgHr+jkIQdkk03+McAmr2vqQdUW1pCfbzI4w7pUd5BSbHxK2Z33sgiGu/ODQsWl/l17Hng==}
+    engines: {node: '>= 10'}
+
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -1097,6 +1202,9 @@ packages:
     resolution: {integrity: sha512-AyleYRPU7+rgkMWbEh71fQlrzRfeP6SyMnRf9XX4fCdDPAJumdSBqYEcWPMzVQ4ScAl7E4oFfK0GUVn77xSwbw==}
     cpu: [x64]
     os: [win32]
+
+  '@simplewebauthn/types@12.0.0':
+    resolution: {integrity: sha512-q6y8MkoV8V8jB4zzp18Uyj2I7oFp2/ONL8c3j8uT06AOWu3cIChc1au71QYHrP2b+xDapkGTiv+9lX7xkTlAsA==}
 
   '@sindresorhus/merge-streams@2.3.0':
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
@@ -1943,6 +2051,9 @@ packages:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
     engines: {node: '>=6'}
 
+  eventemitter3@5.0.1:
+    resolution: {integrity: sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==}
+
   events@3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
@@ -2367,6 +2478,9 @@ packages:
   jose@4.15.9:
     resolution: {integrity: sha512-1vUQX+IdDMVPj4k8kOxgUqlcK518yluMuGZwqlr44FS1ppZB/5GWh4rZG89erpOBOJjU/OBsnCVFfapsRz6nEA==}
 
+  jose@6.0.8:
+    resolution: {integrity: sha512-EyUPtOKyTYq+iMOszO42eobQllaIjJnwkZ2U93aJzNyPibCy7CEvT9UQnaCVB51IAd49gbNdCew1c0LcLTCB2g==}
+
   joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
@@ -2492,6 +2606,10 @@ packages:
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
+  lru-cache@11.0.2:
+    resolution: {integrity: sha512-123qHRfJBmo2jXDbo/a5YOQrJoHF/GNQTLzQ5+IdK5pWpceK17yRc6ozlWd25FxvGKQbIUs91fDFkXmDHTKcyA==}
+    engines: {node: 20 || >=22}
+
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
@@ -2603,6 +2721,9 @@ packages:
   minizlib@3.0.1:
     resolution: {integrity: sha512-umcy022ILvb5/3Djuu8LWeqUa8D68JaBzlttKeMWen48SjabqS3iY5w/vzeMzMUNhLDifyhbOwKDSznB1vvrwg==}
     engines: {node: '>= 18'}
+
+  misskey-js@2025.3.1-beta.2:
+    resolution: {integrity: sha512-XRobcqEK1YSO3vNAUA55hIS9aCLFF6kSeFul5rX3eQy08013e1XAhyU8FUA8tmYVA+qjYEOK9Bwppb0whdKmug==}
 
   mitt@3.0.1:
     resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
@@ -2745,6 +2866,9 @@ packages:
     engines: {node: ^14.16.0 || >=16.10.0}
     hasBin: true
 
+  oauth4webapi@3.3.0:
+    resolution: {integrity: sha512-ZlozhPlFfobzh3hB72gnBFLjXpugl/dljz1fJSRdqaV2r3D5dmi5lg2QWI0LmUYuazmE+b5exsloEv6toUtw9g==}
+
   object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
@@ -2808,6 +2932,9 @@ packages:
 
   openid-client@5.7.1:
     resolution: {integrity: sha512-jDBPgSVfTnkIh71Hg9pRvtJc6wTwqjRkN88+gCFtYWrlP4Yx2Dsrow8uPi3qLr/aeymPF3o2+dS+wOpglK04ew==}
+
+  openid-client@6.3.3:
+    resolution: {integrity: sha512-lTK8AV8SjqCM4qznLX0asVESAwzV39XTVdfMAM185ekuaZCnkWdPzcxMTXNlsm9tsUAMa1Q30MBmKAykdT1LWw==}
 
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
@@ -3202,6 +3329,9 @@ packages:
   real-require@0.2.0:
     resolution: {integrity: sha512-57frrGM/OCTLqLOAh0mhVA9VBMHd+9U7Zb2THMGdBUoZVOtGbJzjxsYGDJ3A9AYYCP4hn6y1TVbaOfzWtm5GFg==}
     engines: {node: '>= 12.13.0'}
+
+  reconnecting-websocket@4.4.0:
+    resolution: {integrity: sha512-D2E33ceRPga0NvTDhJmphEgJ7FUYF0v4lr1ki0csq06OdlxKfugGzN0dSkxM/NfqCxYELK4KcaTOUOjTV6Dcng==}
 
   redis-errors@1.2.0:
     resolution: {integrity: sha512-1qny3OExCf0UvUV/5wpYKf2YwPcOqXzkwKKSmKHiE6ZMQs5heeE/c8eXK+PNllPvmjgAbfnsbpkGZWy8cBpn9w==}
@@ -4593,6 +4723,67 @@ snapshots:
       '@node-rs/argon2-win32-ia32-msvc': 2.0.2
       '@node-rs/argon2-win32-x64-msvc': 2.0.2
 
+  '@node-rs/jsonwebtoken-android-arm-eabi@0.5.9':
+    optional: true
+
+  '@node-rs/jsonwebtoken-android-arm64@0.5.9':
+    optional: true
+
+  '@node-rs/jsonwebtoken-darwin-arm64@0.5.9':
+    optional: true
+
+  '@node-rs/jsonwebtoken-darwin-x64@0.5.9':
+    optional: true
+
+  '@node-rs/jsonwebtoken-freebsd-x64@0.5.9':
+    optional: true
+
+  '@node-rs/jsonwebtoken-linux-arm-gnueabihf@0.5.9':
+    optional: true
+
+  '@node-rs/jsonwebtoken-linux-arm64-gnu@0.5.9':
+    optional: true
+
+  '@node-rs/jsonwebtoken-linux-arm64-musl@0.5.9':
+    optional: true
+
+  '@node-rs/jsonwebtoken-linux-x64-gnu@0.5.9':
+    optional: true
+
+  '@node-rs/jsonwebtoken-linux-x64-musl@0.5.9':
+    optional: true
+
+  '@node-rs/jsonwebtoken-wasm32-wasi@0.5.9':
+    dependencies:
+      '@napi-rs/wasm-runtime': 0.2.7
+    optional: true
+
+  '@node-rs/jsonwebtoken-win32-arm64-msvc@0.5.9':
+    optional: true
+
+  '@node-rs/jsonwebtoken-win32-ia32-msvc@0.5.9':
+    optional: true
+
+  '@node-rs/jsonwebtoken-win32-x64-msvc@0.5.9':
+    optional: true
+
+  '@node-rs/jsonwebtoken@0.5.9':
+    optionalDependencies:
+      '@node-rs/jsonwebtoken-android-arm-eabi': 0.5.9
+      '@node-rs/jsonwebtoken-android-arm64': 0.5.9
+      '@node-rs/jsonwebtoken-darwin-arm64': 0.5.9
+      '@node-rs/jsonwebtoken-darwin-x64': 0.5.9
+      '@node-rs/jsonwebtoken-freebsd-x64': 0.5.9
+      '@node-rs/jsonwebtoken-linux-arm-gnueabihf': 0.5.9
+      '@node-rs/jsonwebtoken-linux-arm64-gnu': 0.5.9
+      '@node-rs/jsonwebtoken-linux-arm64-musl': 0.5.9
+      '@node-rs/jsonwebtoken-linux-x64-gnu': 0.5.9
+      '@node-rs/jsonwebtoken-linux-x64-musl': 0.5.9
+      '@node-rs/jsonwebtoken-wasm32-wasi': 0.5.9
+      '@node-rs/jsonwebtoken-win32-arm64-msvc': 0.5.9
+      '@node-rs/jsonwebtoken-win32-ia32-msvc': 0.5.9
+      '@node-rs/jsonwebtoken-win32-x64-msvc': 0.5.9
+
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -5076,6 +5267,8 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.34.9':
     optional: true
+
+  '@simplewebauthn/types@12.0.0': {}
 
   '@sindresorhus/merge-streams@2.3.0': {}
 
@@ -5992,6 +6185,8 @@ snapshots:
 
   event-target-shim@5.0.1: {}
 
+  eventemitter3@5.0.1: {}
+
   events@3.3.0: {}
 
   execa@7.2.0:
@@ -6461,6 +6656,8 @@ snapshots:
 
   jose@4.15.9: {}
 
+  jose@6.0.8: {}
+
   joycon@3.1.1: {}
 
   js-levenshtein@1.1.6: {}
@@ -6616,6 +6813,8 @@ snapshots:
 
   lru-cache@10.4.3: {}
 
+  lru-cache@11.0.2: {}
+
   lru-cache@5.1.1:
     dependencies:
       yallist: 3.1.1
@@ -6706,6 +6905,12 @@ snapshots:
     dependencies:
       minipass: 7.1.2
       rimraf: 5.0.10
+
+  misskey-js@2025.3.1-beta.2:
+    dependencies:
+      '@simplewebauthn/types': 12.0.0
+      eventemitter3: 5.0.1
+      reconnecting-websocket: 4.4.0
 
   mitt@3.0.1: {}
 
@@ -7026,6 +7231,8 @@ snapshots:
       pkg-types: 2.1.0
       tinyexec: 0.3.2
 
+  oauth4webapi@3.3.0: {}
+
   object-assign@4.1.1: {}
 
   object-hash@2.2.0: {}
@@ -7094,6 +7301,11 @@ snapshots:
       lru-cache: 6.0.0
       object-hash: 2.2.0
       oidc-token-hash: 5.1.0
+
+  openid-client@6.3.3:
+    dependencies:
+      jose: 6.0.8
+      oauth4webapi: 3.3.0
 
   package-json-from-dist@1.0.1: {}
 
@@ -7486,6 +7698,8 @@ snapshots:
   readdirp@4.1.2: {}
 
   real-require@0.2.0: {}
+
+  reconnecting-websocket@4.4.0: {}
 
   redis-errors@1.2.0: {}
 

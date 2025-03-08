@@ -29,7 +29,7 @@ model UserIdentity {
   providerId String @map("provider_id")
   provider     Providers @relation(fields: [providerId], references: [id])  // OIDC プロバイダー (google, github, keycloak)
   sub          String   // プロバイダー固有のユーザーID
-  userId       String   @unique @map("user_id") // User の ID
+  userId       String   @map("user_id") // User の ID
   accessToken String? @map("access_token")
   idToken     String? @map("id_token")
   refreshToken String? @map("refresh_token")
@@ -59,7 +59,7 @@ model Providers {
   name String @unique
   url String
   clientId String @map("client_id")
-  clientSecret String @map("client_secret")
+  clientSecret String? @map("client_secret")
   // redirect_uris は自動
   // response_types ?
   scope String @default("openid profile email")

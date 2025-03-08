@@ -6,6 +6,8 @@ import { auth } from './auth'
 import { callback } from './callback'
 import { getCookie } from 'hono/cookie'
 import { jwtDecode } from 'jwt-decode'
+import { misskeyAuth } from './misskey.auth'
+import { misskeyCallback } from './misskey.callback'
 
 const app = new Hono()
 
@@ -19,6 +21,9 @@ app.get('/api/v0/health', (c) => {
 
 app.route('/api/v0/auth', auth)
 app.route('/api/v0/callback', callback)
+
+app.route('/api/v0/misskey/auth', misskeyAuth)
+app.route('/api/v0/misskey/callback', misskeyCallback)
 
 app.get('/api/v0/me', async (c) => {
   const token = getCookie(c, 'auth_token');
