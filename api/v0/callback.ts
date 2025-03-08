@@ -4,6 +4,7 @@ import { BaseClient, Issuer, generators } from 'openid-client';
 import { jwtDecode } from 'jwt-decode';
 import prisma from "~/lib/prisma";
 import { clients } from "../common/clients";
+import type { IJwtPayload } from "../common/jwtDecode";
 
 const callbackApp = new Hono()
 
@@ -21,12 +22,13 @@ const callbackApp = new Hono()
       { code_verifier: codeVerifier }
     );
   
-    const userInfo = jwtDecode<{ [k: string]: string }>(tokenSet.id_token!);
+    const userInfo = jwtDecode<IJwtPayload>(tokenSet.id_token!);
+    const providerCol = await prisma.providers.findFirst({where: {name: {contains: provider}}})
 
     console.dir(userInfo)
     
     let identity = await prisma.userIdentity.findUnique({
-      where: { provider_sub: { provider, sub: userInfo.sub! } },
+      where: { providerId_sub: { providerId: providerCol!.id, sub: userInfo.sub! } },
       include: { user: true },
     });
   
@@ -38,15 +40,17 @@ const callbackApp = new Hono()
         user = await prisma.user.create({
           data: {
             mail: userInfo.email,
-            name: userInfo.name || 'unknown name',
+            name: userInfo.name || userInfo.preferred_username || 'unknown name',
+            displayName: userInfo.nickname || userInfo.preferred_username || userInfo.name,
             avatarUrl: userInfo.picture,
           },
         });
       }
   
+      // @ts-ignore
       identity = await prisma.userIdentity.create({
         data: {
-          provider,
+          providerId: providerCol!.id,
           sub: userInfo.sub!,
           userId: user.id,
           accessToken: tokenSet.access_token!,

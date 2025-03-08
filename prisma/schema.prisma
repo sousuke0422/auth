@@ -16,7 +16,7 @@ model User {
   displayName String?  @map("display_name")
   isAdmin     Boolean  @default(false) @map("is_admin")
   avatarUrl   String?   @map("avatar_url")
-  mail String?
+  mail String? @unique
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   passwordId String? @map("password_id")
@@ -26,7 +26,8 @@ model User {
 
 model UserIdentity {
   id           String   @id @default(cuid())
-  provider     String   // OIDC プロバイダー名 (google, github, keycloak)
+  providerId String @map("provider_id")
+  provider     Providers @relation(fields: [providerId], references: [id])  // OIDC プロバイダー (google, github, keycloak)
   sub          String   // プロバイダー固有のユーザーID
   userId       String   @unique @map("user_id") // User の ID
   accessToken String? @map("access_token")
@@ -35,7 +36,7 @@ model UserIdentity {
   expiresAt   DateTime? @map("expires_at")
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, sub])  // 同じプロバイダーで同じ sub は1つだけ
+  @@unique([providerId, sub])  // 同じプロバイダーで同じ sub は1つだけ
 }
 
 model UserPassword {
@@ -55,7 +56,7 @@ model UserPassword {
 
 model Providers {
   id String @id @default(cuid())
-  name String
+  name String @unique
   url String
   clientId String @map("client_id")
   clientSecret String @map("client_secret")
@@ -63,4 +64,8 @@ model Providers {
   // response_types ?
   scope String @default("openid profile email")
   // code_challenge_method ?
+
+  isMisskey Boolean @default(false) @map("is_misskey")
+
+  userIdentities UserIdentity[]
 }
