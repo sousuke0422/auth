@@ -16,6 +16,7 @@
 
 - Misskey: <https://ac.akirin.xyz/>
   - isMisskeyフラグを立てること
+  - **misskey側の問題で複数ノードあると失敗することがある** [misskey#13088](https://github.com/misskey-dev/misskey/issues/13088)
   - `https://ac.akirin.xyz/.well-known/oauth-authorization-server`
 
 <details>
