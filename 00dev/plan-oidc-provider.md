@@ -74,39 +74,104 @@
 └─────────────────────────────────────────────────┘
 ```
 
-### oidc-provider のマウント方法
+### oidc-provider のマウント方法 — サブパス問題と解決策
 
-`oidc-provider` は Koa ベースだが、`provider.callback()` で標準の Node.js HTTP ハンドラ
-`(req, res) => void` を返すため、Nuxt の `serverHandlers` に直接マウントできる。
+#### 問題: oidc-provider はルートを前提としたルーティングを行う
+
+`oidc-provider` は内部で Koa ルーターを使い、 `/auth`, `/token`, `/.well-known/openid-configuration`
+等のルートを **ルート直下** に登録する。そのため、単純に `/oidc/**` にマウントすると:
+
+- `issuer` に `/oidc` パスを含めても、**内部ルーティングには反映されない**
+- Discovery の `authorization_endpoint` が `/auth` (ルート直下) として公開されてしまう
+- `/oidc/auth` へのリクエストが 404 になる
+
+```
+❌ 単純マウントの場合:
+  GET /oidc/.well-known/openid-configuration → 404
+  GET /.well-known/openid-configuration      → 200 (だがエンドポイントURLが /auth 等ルート直下)
+```
+
+#### 解決策: `req.baseUrl` + prefix stripping + proxy
+
+`oidc-provider` は Express 互換の `req.baseUrl` プロパティを参照して、
+エンドポイントURLのプレフィックスを組み立てる。これを利用する:
+
+1. リクエストURLからプレフィックス (`/oidc`) を除去
+2. `req.baseUrl = '/oidc'` を設定
+3. `req.originalUrl` に元のURLを保持
+4. `provider.proxy = true` + `X-Forwarded-*` ヘッダーで正しいホスト名を伝達
+
+```
+✅ 正しいマウント:
+  GET /oidc/.well-known/openid-configuration → 200
+    issuer: https://example.com/oidc
+    authorization_endpoint: https://example.com/oidc/auth
+    token_endpoint: https://example.com/oidc/token
+    jwks_uri: https://example.com/oidc/jwks
+  GET /oidc/auth → 400 (パラメータ不足=ルーティング成功)
+  GET /auth      → 404 (oidc-provider に到達しない)
+```
+
+#### 実装コード (Nuxt serverHandler)
 
 ```ts
-// server/routes/oidc/[...path].ts (Nuxt server route)
+// server/oidc/index.ts
 import { Provider } from 'oidc-provider';
-import { defineEventHandler, getRequestURL } from 'h3';
+import { defineEventHandler } from 'h3';
 
-const provider = new Provider('https://your-domain.com', {
-  // configuration...
-});
+const MOUNT_PATH = '/oidc';
+const issuer = `${process.env.HOST || 'http://localhost:3000'}${MOUNT_PATH}`;
+
+const provider = new Provider(issuer, { /* config */ });
+provider.proxy = true;
+
+const callback = provider.callback();
 
 export default defineEventHandler((event) => {
-  return new Promise((resolve, reject) => {
-    const { req, res } = event.node;
-    provider.callback()(req, res)
-      .then(resolve)
-      .catch(reject);
+  const { req, res } = event.node;
+
+  // h3/Nuxt の serverHandler は route prefix を strip する場合があるため、
+  // 元のURLを復元して baseUrl を設定する
+  const originalUrl = req.url || '/';
+  if (!originalUrl.startsWith(MOUNT_PATH)) {
+    // serverHandler がプレフィックスを strip した場合
+    req.originalUrl = `${MOUNT_PATH}${originalUrl}`;
+    req.url = originalUrl; // strip済みのまま
+  } else {
+    // strip されていない場合は手動で strip
+    req.originalUrl = originalUrl;
+    req.url = originalUrl.slice(MOUNT_PATH.length) || '/';
+  }
+  req.baseUrl = MOUNT_PATH;
+
+  return new Promise<void>((resolve, reject) => {
+    res.on('finish', resolve);
+    callback(req, res).catch(reject);
   });
 });
 ```
-
-あるいは、Nuxt の `serverHandlers` で `/oidc/**` にマウントする方法:
 
 ```ts
 // nuxt.config.ts
 serverHandlers: [
   { route: '/api/v0/**', handler: '~/../api/v0/index.ts' },
-  { route: '/oidc/**',   handler: '~/server/oidc.ts' },
+  { route: '/oidc/**',   handler: '~/server/oidc/index.ts' },
 ]
 ```
+
+#### 検証済み動作
+
+実際にテストスクリプトで以下を確認済み:
+
+| リクエストパス | 期待 | 結果 |
+|---|---|---|
+| `GET /oidc/.well-known/openid-configuration` | 200 + 正しいエンドポイントURL | ✅ |
+| `GET /oidc/auth` | 400 (パラメータ不足 = ルーティング正常) | ✅ |
+| `GET /auth` (ルート直下) | 404 (oidc-provider に到達しない) | ✅ |
+| `GET /.well-known/openid-configuration` (ルート) | 404 | ✅ |
+| Discovery の `authorization_endpoint` | `http://host/oidc/auth` | ✅ |
+| Discovery の `token_endpoint` | `http://host/oidc/token` | ✅ |
+| Discovery の `jwks_uri` | `http://host/oidc/jwks` | ✅ |
 
 ---
 
