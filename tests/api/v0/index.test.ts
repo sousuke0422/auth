@@ -69,15 +69,10 @@ describe('api/v0/index - Honoルーター', () => {
     vi.clearAllMocks()
   })
 
-  it('healthエンドポイントが正常応答を返す', async () => {
+  it('デフォルトエクスポートがdefineEventHandlerで生成されたハンドラーである', async () => {
     const mod = await import('~/api/v0/index')
-    const app = (mod as any).default
-
-    // Hono appは直接テストできないのでfetchを使う
-    // ただし defineEventHandler でラップされている
-    // index.ts のHonoアプリを直接テストするために、内部のappにアクセスする必要がある
-    // Hono appの .request() を使ってテスト
-    expect(mod).toBeDefined()
+    expect(mod.default).toBeDefined()
+    expect(typeof mod.default).toBe('function')
   })
 })
 
