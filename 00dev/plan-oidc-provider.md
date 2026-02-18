@@ -408,6 +408,51 @@ export const misskeyAuthStorage = createStorage({
 
 ---
 
+## JWK 自動生成・永続化 (実装済み)
+
+### 方針
+
+再起動のたびに鍵を再生成すると既発行トークンが全て無効になるため、
+**初回起動時に生成 → DB に永続化 → 以降は DB から読み込み** とする。
+
+### 優先順位
+
+1. **環境変数 `OIDC_JWKS`** — 明示的な鍵指定。CI/CD やマネージド環境向け
+2. **DB (SystemConfig テーブル)** — 起動時に読み込み
+3. **新規生成** — 初回起動時。RS256 鍵ペアを生成し DB に永続化
+
+### 実装
+
+`server/oidc/jwks.ts` と `prisma/schema.prisma` の `SystemConfig` テーブルで実装済み。
+
+```ts
+// server/oidc/jwks.ts — 使い方
+import { loadOrGenerateJwks } from './jwks';
+
+const jwks = await loadOrGenerateJwks();
+// → { keys: [{ kty: 'RSA', kid: '...', alg: 'RS256', use: 'sig', n: '...', e: '...', d: '...', ... }] }
+
+const provider = new Provider(issuer, {
+  jwks,
+  // ...
+});
+```
+
+### 検証済み
+
+- `jose` の `generateKeyPair('RS256')` + `exportJWK()` で RS256 鍵ペアを生成
+- DB への保存・読み込みのラウンドトリップ正常
+- `oidc-provider` に渡して `/oidc/jwks` エンドポイントで**公開鍵のみ**が返却されること確認 (秘密鍵はリークしない)
+
+### 鍵ローテーション
+
+将来的に鍵ローテーションが必要な場合:
+- `jwks.keys` 配列に新しい鍵を追加し、古い鍵も残す
+- `oidc-provider` は `kid` で鍵を区別するため、古いトークンの検証は継続可能
+- 一定期間後に古い鍵を削除
+
+---
+
 ## 実装ステップ
 
 ### Phase 1: 基盤セットアップ
@@ -489,9 +534,8 @@ export const misskeyAuthStorage = createStorage({
        keys: [process.env.OIDC_COOKIE_SECRET!],
      },
 
-     jwks: {
-       keys: [/* JWK — 起動時に生成 or 環境変数から */],
-     },
+     // JWK は loadOrGenerateJwks() で取得 (後述)
+     jwks: await loadOrGenerateJwks(),
 
      ttl: {
        AccessToken: 3600,
@@ -613,7 +657,7 @@ volumes:
 | `VALKEY_URL` | Valkey/Redis 接続文字列 | `redis://localhost:6379` |
 | `HOST` | 公開ホスト名 (protocol含む) | `https://auth.example.com` |
 | `OIDC_COOKIE_SECRET` | oidc-provider cookie 暗号化キー | ランダム文字列 |
-| `OIDC_JWKS` | JWK Set (JSON文字列) | `{"keys":[...]}` |
+| `OIDC_JWKS` | JWK Set (JSON文字列、省略時はDB自動生成) | `{"keys":[...]}` |
 
 ---
 
@@ -621,7 +665,7 @@ volumes:
 
 ### セキュリティ
 
-- **JWK 鍵管理**: RS256 の鍵ペアを安全に保管（環境変数 `OIDC_JWKS` or ファイル）。初回起動時に自動生成する仕組みも検討
+- **JWK 鍵管理**: 下記「JWK 自動生成・永続化」セクション参照。実装済み
 - **Cookie Secret**: oidc-provider 用の cookie 暗号化キーを環境変数で管理
 - **HTTPS 必須**: 本番環境では HTTPS が前提（`oidc-provider` はデフォルトで強制）
 - **PKCE 強制**: public client に対しては必須にする
