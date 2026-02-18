@@ -86,15 +86,19 @@ describe('api/v0 - Honoルーター統合テスト', () => {
     expect(mod.default).toBeDefined()
   })
 
-  it('/api/v0/meが認証なしで401を返す契約を持つ', async () => {
-    // /me エンドポイントの仕様:
-    // - auth_token Cookieが無い場合 → 401
-    // - auth_token がある場合 → JWTデコード → ユーザー情報取得
-    // この契約はバージョン統一後も維持されるべき
-    const { jwtDecode } = await import('jwt-decode')
-    expect(jwtDecode).toBeDefined()
+  it('/api/v0/meが認証なしで401を返す', async () => {
+    const h3 = await import('h3')
+    vi.mocked(h3.toWebRequest).mockReturnValue(
+      new Request('http://localhost/api/v0/me') as any
+    )
 
-    const prisma = (await import('~/lib/prisma')).default
-    expect(prisma.user.findUnique).toBeDefined()
+    const mod = await import('~/api/v0/index')
+    const handler = mod.default as (event: any) => Promise<Response>
+
+    const fakeEvent = { node: { req: { originalUrl: '/api/v0/me' } } }
+    const res = await handler(fakeEvent)
+
+    expect(res.status).toBe(401)
+    expect(await res.text()).toBe('Unauthorized')
   })
 })
