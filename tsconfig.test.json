@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "paths": {
+      "~/*": ["./*"],
+      "openid-client@6": ["./node_modules/openid-client"]
+    }
+  },
+  "include": ["tests/**/*.ts", "api/**/*.ts", "lib/**/*.ts"]
+}
