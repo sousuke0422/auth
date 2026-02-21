@@ -2,9 +2,12 @@ import { Hono } from "hono";
 import { getCookie, setCookie } from 'hono/cookie'
 import { BaseClient, Issuer, generators } from 'openid-client';
 import prisma from "~/lib/prisma";
-import { clients } from "../common/clients";
+import { clients } from "../oidc/clients";
+import { honoLogger } from "../common/logger";
 
 const authApp = new Hono()
+
+const logger = honoLogger.getSubLogger({ name: 'OpenIDConnectAuth' })
 
 // ログインエンドポイント
 authApp.get('/:provider', async (c) => {
@@ -12,7 +15,7 @@ authApp.get('/:provider', async (c) => {
     const provider = clients[_provider.toLowerCase()] as BaseClient
     if (!provider) return c.text('Invalid provider', 400);
     const _scope = await prisma.providers.findFirst({where: {name: {contains: _provider}}})
-    console.log(_scope?.scope)
+    logger.silly(_scope?.scope)
 
     const codeVerifier = generators.codeVerifier();
     const codeChallenge = generators.codeChallenge(codeVerifier);

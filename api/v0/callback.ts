@@ -3,29 +3,33 @@ import { getCookie, setCookie } from 'hono/cookie'
 import { BaseClient, Issuer, generators } from 'openid-client';
 import { jwtDecode } from 'jwt-decode';
 import prisma from "~/lib/prisma";
-import { clients } from "../common/clients";
-import type { IJwtPayload } from "../common/jwtDecode";
+import { clients } from "../oidc/clients";
+import type { IJwtPayload } from "../common/types/jwtDecode";
+import { honoLogger } from "../common/logger";
 
 const callbackApp = new Hono()
+
+const logger = honoLogger.getSubLogger({ name: 'OpenIDConnectCallback' })
 
   callbackApp.get('/:provider', async (c) => {
     const provider = c.req.param('provider');
     if (!clients[provider]) return c.text('Invalid provider', 400);
+    const providerCol = await prisma.providers.findFirst({where: {name: {contains: provider}}})
   
     const params = c.req.query();
     const code = params.code;
     const codeVerifier = getCookie(c, 'code_verifier');
   
     const tokenSet = await (clients[provider] as BaseClient).callback(
+      // TODO: 変数で設定
       `http://localhost:3000/api/v0/callback/${provider}`,
       { code },
       { code_verifier: codeVerifier }
     );
   
     const userInfo = jwtDecode<IJwtPayload>(tokenSet.id_token!);
-    const providerCol = await prisma.providers.findFirst({where: {name: {contains: provider}}})
 
-    console.dir(userInfo)
+    logger.debug(userInfo)
     
     let identity = await prisma.userIdentity.findUnique({
       where: { providerId_sub: { providerId: providerCol!.id, sub: userInfo.sub! } },

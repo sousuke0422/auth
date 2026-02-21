@@ -1,7 +1,11 @@
 import { Issuer } from "openid-client";
 import * as client from 'openid-client@6'
 import prisma from "~/lib/prisma";
-import { host, isProd } from "./const";
+import { host, isProd, maskPlaceholder } from "../common/const";
+import { Logger } from "tslog";
+import { honoLogger } from "../common/logger";
+
+const logger = honoLogger.getSubLogger({ name: 'Client', maskValuesOfKeys: ['clientSecret'] })
 
 const clients: Record<string, any> = {};
 const misskeyClients: Record<string, client.Configuration> = {};
@@ -10,13 +14,13 @@ const misskeyClients: Record<string, client.Configuration> = {};
 async function initOIDCClients() {
   const providers = await prisma.providers.findMany()
   // console.dir(providers)
-  console.log(`isProd: ${isProd}, host: ${host}`)
+  logger.info(`isProd: ${isProd}, host: ${host}`)
   for (const provider of providers) {
     if (provider.isMisskey) {
-      console.dir(provider)
+      logger.debug(provider)
       misskeyClients[provider.name.toLowerCase()] = await client.discovery(new URL(provider.url), provider.clientId)
     } else {
-      console.dir(provider)
+      logger.debug(provider)
       const issuer = await Issuer.discover(provider.url);
       clients[provider.name.toLowerCase()] = new issuer.Client({
         client_id: provider.clientId,

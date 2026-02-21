@@ -41,6 +41,7 @@
     "shadcn-nuxt": "1.0.2",
     "tailwind-merge": "3.0.2",
     "tailwindcss-animate": "1.0.7",
+    "tslog": "^4.9.3",
     "unstorage": "^1.15.0",
     "vue": "3.5.13",
     "vue-router": "4.5.0",

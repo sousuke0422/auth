@@ -3,10 +3,13 @@ import { getCookie, setCookie } from 'hono/cookie'
 import * as client from 'openid-client@6'
 import { api as misskeyApi } from 'misskey-js';
 import prisma from "~/lib/prisma";
-import { misskeyClients } from "../common/clients";
-import { misskeyAuthStorage } from "../common/helper/misskeyAuthStorage";
+import { misskeyClients } from "../oidc/clients";
+import { misskeyAuthStorage } from "../common/storage";
+import { honoLogger } from "../common/logger";
 
 const misskeyCallbackApp = new Hono()
+
+const logger = honoLogger.getSubLogger({ name: 'MisskeyCallback' })
 
 misskeyCallbackApp.get('/:provider', async (c) => {
     const _provider = c.req.param('provider');
@@ -17,6 +20,7 @@ misskeyCallbackApp.get('/:provider', async (c) => {
     const params = c.req.query();
     const code = params.code;
     const codeVerifier = getCookie(c, 'code_verifier');
+    if (!codeVerifier) c.json({ message: 'not found cookie of code_verifier' }, 400)
   
     // const tokenSet = await (misskeyClients[provider] as BaseClient).callback(
     //   `http://localhost:3000/api/v0/callback/${provider}`,
@@ -25,7 +29,7 @@ misskeyCallbackApp.get('/:provider', async (c) => {
     // );
     const tokens = await client.authorizationCodeGrant(provider, new URL(c.req.url), {
       pkceCodeVerifier: codeVerifier,
-      expectedState: await misskeyAuthStorage.getItem<string>(codeVerifier!) || 'err'
+      expectedState: await misskeyAuthStorage.getItem<string>(`${codeVerifier}:state`) || 'err'
     })
 
     const instanecHost = () => {
@@ -40,7 +44,7 @@ misskeyCallbackApp.get('/:provider', async (c) => {
     // const userInfo = jwtDecode<IJwtPayload>(tokenSet.id_token!);
     const userI = await cli.request('i',{})
 
-    console.dir(userI)
+    logger.silly(userI)
     
     let identity = await prisma.userIdentity.findUnique({
       where: { providerId_sub: { providerId: providerCol!.id, sub: userI.id } },
@@ -61,8 +65,6 @@ misskeyCallbackApp.get('/:provider', async (c) => {
           },
         });
       }
-
-      console.log(user.id)
   
       // @ts-ignore
       identity = await prisma.userIdentity.create({
