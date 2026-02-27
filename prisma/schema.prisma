@@ -69,3 +69,12 @@ model Providers {
 
   userIdentities UserIdentity[]
 }
+
+model SystemConfig {
+  key       String   @id
+  value     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("system_config")
+}
